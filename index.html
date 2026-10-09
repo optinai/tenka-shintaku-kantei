@@ -66,6 +66,19 @@
     .price-mini b{display:block;font-size:13px;color:var(--gold-hi);font-weight:600}
     .price-mini span{font-family:"Cormorant Garamond",serif;font-size:30px;font-weight:600}
     .summary small{display:block;color:var(--muted);line-height:1.8;margin-top:13px;font-size:12px}
+    .countdown-shell{padding:54px 18px 18px;background:linear-gradient(180deg,var(--ink),#111b28)}
+    .countdown-card{--remaining:100%;position:relative;max-width:650px;margin:auto;padding:54px 20px 28px;border:2px solid #d8a397;outline:1px solid rgba(198,164,93,.42);outline-offset:-14px;background:linear-gradient(180deg,#fffaf4,#f7f0e7);color:#392f2a;text-align:center;box-shadow:0 20px 55px rgba(0,0,0,.3)}
+    .countdown-badge{position:absolute;top:-24px;left:50%;transform:translateX(-50%);padding:12px 27px;background:#a83f2c;color:#fff;font-family:"Shippori Mincho B1",serif;font-size:17px;font-weight:800;letter-spacing:.12em;white-space:nowrap;box-shadow:0 9px 22px rgba(104,35,22,.2)}
+    .countdown-kicker{font-size:12px;color:#87663f;letter-spacing:.16em;margin-bottom:8px}
+    .countdown-card h2{font-size:clamp(22px,6vw,31px);line-height:1.65;color:#382f2b;letter-spacing:.05em}
+    .countdown-card h2 strong{display:block;color:#4d6848;font-size:1.13em}
+    .countdown-prices{margin-top:10px;color:#71665f;font-size:13px;line-height:1.8}
+    .countdown-timer{display:grid;grid-template-columns:repeat(4,1fr);max-width:430px;margin:25px auto 18px}
+    .time-part{position:relative;min-width:0}.time-part:not(:last-child):after{content:"：";position:absolute;right:-.34em;top:4px;color:#bd7967;font-family:"Shippori Mincho B1",serif;font-size:24px}
+    .time-value{display:block;font:600 clamp(38px,11vw,59px)/1 "Cormorant Garamond",serif;color:#392f2b;font-variant-numeric:tabular-nums}.time-part:last-child .time-value{color:#b34e39}.time-label{display:block;margin-top:7px;color:#7b6f67;font-size:11px;letter-spacing:.12em}
+    .countdown-progress-head{display:flex;justify-content:space-between;gap:14px;margin:20px 6px 8px;color:#756a63;font-size:12px}.countdown-progress-head b{color:#ad4b35;font-family:"Shippori Mincho B1",serif}
+    .countdown-track{height:10px;margin:0 6px;border:1px solid #e3cfaa;border-radius:999px;background:#eeeae5;overflow:hidden}.countdown-track span{display:block;width:var(--remaining);height:100%;border-radius:inherit;background:linear-gradient(90deg,#b94c31,#efa08d);transition:width 1s linear}
+    .countdown-note{margin:15px 10px 0;color:#71665f;font-size:11px;line-height:1.8}.countdown-ended{display:none;margin:23px 0 5px;color:#9b3d2c;font-family:"Shippori Mincho B1",serif;font-size:17px;font-weight:700}.countdown-card.is-ended .countdown-ended{display:block}.countdown-card.is-ended .countdown-progress{display:none}
     .big{font-family:"Shippori Mincho B1",serif;text-align:center;font-size:clamp(27px,7.8vw,42px);line-height:1.65;font-weight:800;margin:46px 0}
     .quote{margin:42px 0;padding:31px 20px;border-top:1px solid rgba(198,164,93,.3);border-bottom:1px solid rgba(198,164,93,.3);text-align:center;font-family:"Shippori Mincho B1",serif;font-size:18px;line-height:2.1;color:var(--gold-hi);background:linear-gradient(180deg,rgba(198,164,93,.06),transparent)}
     .photo{position:relative;margin:46px calc(var(--pad) * -1);overflow:hidden}
@@ -167,6 +180,27 @@
       <div class="price-mini"><b>魂の全景</b><span>9,999<small>円</small></span></div>
     </div>
     <small>ご回答をいただいてから、約3〜5日でお届けします。</small>
+  </div>
+
+  <div class="countdown-shell">
+    <div class="countdown-card reveal" data-countdown data-storage-key="tenka-shintaku-kantei-countdown-v1">
+      <div class="countdown-badge">無料鑑定後 3日間</div>
+      <div class="countdown-kicker">FOR YOU</div>
+      <h2>神託を、<br><strong>次の景色まで受け取るために</strong></h2>
+      <div class="countdown-prices">魂路の章 4,980円 ／ 魂の全景 9,999円</div>
+      <div class="countdown-timer" aria-label="ご案内期間の残り時間">
+        <div class="time-part"><span class="time-value" data-days>02</span><span class="time-label">日</span></div>
+        <div class="time-part"><span class="time-value" data-hours>23</span><span class="time-label">時間</span></div>
+        <div class="time-part"><span class="time-value" data-minutes>59</span><span class="time-label">分</span></div>
+        <div class="time-part"><span class="time-value" data-seconds>59</span><span class="time-label">秒</span></div>
+      </div>
+      <div class="countdown-progress">
+        <div class="countdown-progress-head"><span>ご案内期間の残り</span><b data-remaining-text>あと3日</b></div>
+        <div class="countdown-track" aria-hidden="true"><span></span></div>
+        <p class="countdown-note">このページを初めて開いてから3日間。<br>再読み込みしても残り時間は戻りません。</p>
+      </div>
+      <p class="countdown-ended">3日間のご案内は終了しました。<br>現在の受付状況は、下の商品案内をご確認ください。</p>
+    </div>
   </div>
 
   <section class="story-one">
@@ -421,6 +455,33 @@
     const top = products.getBoundingClientRect().top;
     sticky.classList.toggle('show', scrollY > innerHeight * .7 && top > 80);
   }, { passive:true });
+  document.querySelectorAll('[data-countdown]').forEach(root => {
+    const duration = 3 * 24 * 60 * 60 * 1000;
+    const key = root.dataset.storageKey;
+    let deadline;
+    try {
+      const saved = Number(localStorage.getItem(key));
+      const hasSavedDeadline = Number.isFinite(saved) && saved > 0;
+      deadline = hasSavedDeadline ? saved : Date.now() + duration;
+      if (!hasSavedDeadline) localStorage.setItem(key, String(deadline));
+    } catch (_) { deadline = Date.now() + duration; }
+    const set = (name, value) => { root.querySelector(`[data-${name}]`).textContent = String(value).padStart(2, '0'); };
+    let timer;
+    const renderCountdown = () => {
+      const diff = Math.max(0, deadline - Date.now());
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      set('days', days); set('hours', hours); set('minutes', minutes); set('seconds', seconds);
+      root.style.setProperty('--remaining', `${Math.max(0, Math.min(100, diff / duration * 100))}%`);
+      root.querySelector('[data-remaining-text]').textContent = diff > 0 ? `あと${days + 1}日` : '終了';
+      if (diff <= 0) { root.classList.add('is-ended'); if (timer) clearInterval(timer); }
+    };
+    renderCountdown();
+    timer = setInterval(renderCountdown, 1000);
+  });
 </script>
 </body>
 </html>
