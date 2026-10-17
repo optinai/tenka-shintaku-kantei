@@ -79,7 +79,7 @@
     .countdown-progress-head{display:flex;justify-content:space-between;gap:14px;margin:20px 6px 8px;color:#756a63;font-size:12px}.countdown-progress-head b{color:#ad4b35;font-family:"Shippori Mincho B1",serif}
     .countdown-track{height:10px;margin:0 6px;border:1px solid #e3cfaa;border-radius:999px;background:#eeeae5;overflow:hidden}.countdown-track span{display:block;width:90%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#b94c31,#efa08d)}
     .countdown-cta{display:block;max-width:390px;margin:20px auto 0;padding:15px 18px;border-radius:999px;background:linear-gradient(100deg,#86652c,#e4ca86 50%,#86652c);color:#20170d;text-decoration:none;font-family:"Shippori Mincho B1",serif;font-size:15px;font-weight:800;letter-spacing:.1em;box-shadow:0 9px 24px rgba(128,91,38,.22)}
-    .countdown-note{margin:15px 10px 0;color:#71665f;font-size:11px;line-height:1.8}.countdown-ended{display:none;margin:23px 0 5px;color:#9b3d2c;font-family:"Shippori Mincho B1",serif;font-size:17px;font-weight:700}.countdown-card.is-ended .countdown-ended{display:block}.countdown-card.is-ended .countdown-progress{display:none}
+    .countdown-note{margin:15px 10px 0;color:#71665f;font-size:11px;line-height:1.8}.countdown-ended{display:none;margin:23px 0 5px;color:#9b3d2c;font-family:"Shippori Mincho B1",serif;font-size:17px;font-weight:700}.countdown-card.is-ended .countdown-ended{display:block}
     .big{font-family:"Shippori Mincho B1",serif;text-align:center;font-size:clamp(27px,7.8vw,42px);line-height:1.65;font-weight:800;margin:46px 0}
     .quote{margin:42px 0;padding:31px 20px;border-top:1px solid rgba(198,164,93,.3);border-bottom:1px solid rgba(198,164,93,.3);text-align:center;font-family:"Shippori Mincho B1",serif;font-size:18px;line-height:2.1;color:var(--gold-hi);background:linear-gradient(180deg,rgba(198,164,93,.06),transparent)}
     .photo{position:relative;margin:46px calc(var(--pad) * -1);overflow:hidden}
@@ -184,8 +184,8 @@
   </div>
 
   <div class="countdown-shell">
-    <div class="countdown-card reveal" data-countdown data-storage-key="tenka-shintaku-kantei-countdown-v1">
-      <div class="countdown-badge">無料鑑定後 3日間</div>
+    <div class="countdown-card reveal" data-countdown data-storage-key="tenka-shintaku-kantei-countdown-start-v2">
+      <div class="countdown-badge">無料鑑定後 8日後の24時まで</div>
       <div class="countdown-kicker">FOR YOU</div>
       <h2>神託を、<br><strong>次の景色まで受け取るために</strong></h2>
       <div class="countdown-prices">魂路の章 4,980円 ／ 魂の全景 9,999円</div>
@@ -199,7 +199,7 @@
         <div class="countdown-progress-head"><span>今月お受けできる本鑑定枠</span><b>残りわずか</b></div>
         <div class="countdown-track" role="img" aria-label="今月お受けできる本鑑定枠は残りわずか"><span></span></div>
         <a class="countdown-cta" href="#products">本鑑定を選ぶ</a>
-        <p class="countdown-note">このページを初めて開いてから3日間。<br>再読み込みしても残り時間は戻りません。</p>
+        <p class="countdown-note">このページを初めて開いた日を基準に、8日後の24時まで。<br>再読み込みしても残り時間は戻りません。</p>
       </div>
       <p class="countdown-ended">3日間のご案内は終了しました。<br>現在の受付状況は、下の商品案内をご確認ください。</p>
     </div>
@@ -458,15 +458,22 @@
     sticky.classList.toggle('show', scrollY > innerHeight * .7 && top > 80);
   }, { passive:true });
   document.querySelectorAll('[data-countdown]').forEach(root => {
-    const duration = 3 * 24 * 60 * 60 * 1000;
+    const periodDays = 8;
     const key = root.dataset.storageKey;
+    const getDeadline = openedAt => {
+      const end = new Date(openedAt);
+      end.setDate(end.getDate() + periodDays);
+      end.setHours(24, 0, 0, 0);
+      return end.getTime();
+    };
     let deadline;
     try {
       const saved = Number(localStorage.getItem(key));
-      const hasSavedDeadline = Number.isFinite(saved) && saved > 0;
-      deadline = hasSavedDeadline ? saved : Date.now() + duration;
-      if (!hasSavedDeadline) localStorage.setItem(key, String(deadline));
-    } catch (_) { deadline = Date.now() + duration; }
+      const hasSavedStart = Number.isFinite(saved) && saved > 0;
+      const openedAt = hasSavedStart ? saved : Date.now();
+      if (!hasSavedStart) localStorage.setItem(key, String(openedAt));
+      deadline = getDeadline(openedAt);
+    } catch (_) { deadline = getDeadline(Date.now()); }
     const set = (name, value) => { root.querySelector(`[data-${name}]`).textContent = String(value).padStart(2, '0'); };
     let timer;
     const renderCountdown = () => {
